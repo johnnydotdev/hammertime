@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from markdown.blockprocessors import BlockProcessor
 from markdown.extensions import Extension
 from markdown.util import etree
+import re
 
 MCQ_START = "@MCQ\n"
 ANS = "@ANS"
@@ -70,7 +71,17 @@ class MCProcessor(BlockProcessor):
         return MCQuestion(question=question, choices=choices,
                                  answer=answer, hint=hint, explanation=explanation)
 
-    #def construct_mc_js(self, ):
+    def question_to_id(self, mc_question):
+        mc_question_as_str = str(mc_question)
+
+        # Only alphanumeric characters allowed before processing.
+        re.sub(r"\W+", "", mc_question_as_str)
+        return mc_question_as_str.replace(" ", "-")
+
+    def construct_mc_js(self, mc_question):
+        mc_question_id = self.question_to_id(mc_question)
+
+
 
     def run(self, parent, blocks):
         raw_block = blocks.pop(0)
@@ -92,7 +103,6 @@ class MCProcessor(BlockProcessor):
 
         choice_container = etree.SubElement(question, "ol")
         choice_container.set("type", "A")
-        print mc_question
         for choice in mc_question.choices:
             choice_elem = etree.SubElement(choice_container, "li")
             choice_content = etree.SubElement(choice_elem, "a")
