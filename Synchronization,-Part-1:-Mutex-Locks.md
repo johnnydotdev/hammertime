@@ -49,9 +49,11 @@ Once we are finished with the mutex we should also call `pthread_mutex_destroy(&
 @MCQ
 What is the class I am taking?
 - CS 241
-- CS 374
+- CS 374 @ANS
 - CS 210
 - STAT 428
+No Hint 4 u @HINT
+No Explanation 4 u @EXP
 @END
 
 @MCQ

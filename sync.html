@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
 	<link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body><h2>What is a Critical Section?</h2>
 <p>A critical section is a section of code that can only be executed by one thread at a time, if the program is to function correctly. If two threads (or processes) were to execute code inside the critical section at the same time then it is possible that program may no longer have correct behavior.</p>
@@ -54,22 +55,47 @@ If one thread is currently inside a critical section we would like another threa
 <div class="question-container">
 <div class="question">
 <h3>What is the class I am taking?</h3>
+<p class="answer"></p>
+<a href="#" class="pure-button hint">Hint</a>
+<p class="hint-text"></p>
 <ol type="A">
-<li><a class="pure-button pure-button-primary" href="#">CS 241</a></li>
-<li><a class="pure-button pure-button-primary" href="#">CS 374</a></li>
-<li><a class="pure-button pure-button-primary" href="#">CS 210</a></li>
-<li><a class="pure-button pure-button-primary" href="#">STAT 428</a></li>
+<li><a class="pure-button choice" href="#">CS 241</a></li>
+<li><a class="pure-button choice" href="#">CS 374</a></li>
+<li><a class="pure-button choice" href="#">CS 210</a></li>
+<li><a class="pure-button choice" href="#">STAT 428</a></li>
 </ol>
 </div>
 </div>
+
+<script>
+    var q = {
+        question: "What is the class I am taking?",
+        choices: ["CS 241", "CS 374", "CS 210", "STAT 428"],
+        answer: "CS 374",
+        hint: "No hint 4 u",
+        explanation: "No explanation 4 u"
+    };
+
+    var formatAnswer = function(ans, explain) {
+        return "<b>Answer:</b> " + ans + ".<br /><b>Explanation:</b> " + explain;
+    };
+
+    $('.choice').on("click", function() {
+        if ($(this).text() === q.answer) {
+            $('.answer').html(formatAnswer(q.answer, q.explanation));
+            $(this).addClass("pure-button-primary");
+        }
+    });
+</script>
+
 <div class="question-container">
 <div class="question">
 <h3>What is the class you are taking?</h3>
 <ol type="A">
-<li><a class="pure-button pure-button-primary" href="#">CS 196</a></li>
-<li><a class="pure-button pure-button-primary" href="#">CS 421</a></li>
-<li><a class="pure-button pure-button-primary" href="#">CS 473</a></li>
-<li><a class="pure-button pure-button-primary" href="#">CS 241</a></li>
+<li><a class="pure-button pure-button-primary choice" href="#">CS 196</a></li>
+<li><a class="pure-button pure-button-primary choice" href="#">CS 421</a></li>
+<li><a class="pure-button pure-button-primary choice" href="#">CS 473</a></li>
+<li><a class="pure-button pure-button-primary choice" href="#">CS 241</a></li>
 </ol>
 </div>
 </div>
