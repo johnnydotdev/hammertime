@@ -23,13 +23,13 @@ class MCQuestion(object):
         self.explanation = explanation
 
     def __repr__(self):
-        return """Question: {0},
-Choices: {1},
-Answer: {2},
-Hint: {3},
-Explanation: {4}""".format(self.question, str(self.choices),
-                            self.answer, self.hint,
-                            self.explanation)
+        return "Question: {0},\n\
+                Choices: {1},\n\
+                Answer: {2},\n\
+                Hint: {3},\n\
+                Explanation: {4}".format(self.question, str(self.choices),
+                                         self.answer, self.hint,
+                                         self.explanation)
 
 class MCProcessor(BlockProcessor):
     """
