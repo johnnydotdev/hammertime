@@ -72,16 +72,14 @@ class MCProcessor(BlockProcessor):
                                  answer=answer, hint=hint, explanation=explanation)
 
     def question_to_id(self, mc_question):
-        mc_question_as_str = str(mc_question)
+        mc_question_as_str = str(mc_question).lower()
+        mc_question_as_str = mc_question_as_str.replace("\n", "")
 
         # Only alphanumeric characters allowed before processing.
-        re.sub(r"\W+", "", mc_question_as_str)
-        return mc_question_as_str.replace(" ", "-")
+        return re.sub(r"\W+", "", mc_question_as_str)
 
     def construct_mc_js(self, mc_question):
-        mc_question_id = self.question_to_id(mc_question)
-
-
+        pass
 
     def run(self, parent, blocks):
         raw_block = blocks.pop(0)
@@ -111,6 +109,8 @@ class MCProcessor(BlockProcessor):
             choice_content.text = choice
 
         script = etree.SubElement(parent, "script")
+        mc_question_id = self.question_to_id(mc_question)
+        print mc_question_id
 
 class MCExtension(Extension):
     """
