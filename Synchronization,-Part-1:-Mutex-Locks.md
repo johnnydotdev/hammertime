@@ -46,6 +46,22 @@ pthread_mutex_unlock(&m); //end of Critical Section
 ```
 Once we are finished with the mutex we should also call `pthread_mutex_destroy(&m)` too. Note, you can only destroy an unlocked mutex. Calling destroy on a destroyed lock, initializing an initialized lock, locking an already locked lock, unlocking an unlocked lock etc are unsupported (at least for default mutexes) and usually result in undefined behavior.
 
+@MCQ
+What is the class I am taking?
+- CS 241
+- CS 374
+- CS 210
+- STAT 428
+@END
+
+@MCQ
+What is the class you are taking?
+- CS 196
+- CS 421
+- CS 473
+- CS 241
+@END
+
 ## If I lock a mutex, does it stop all other threads?
 No, the other threads will continue. It's only when a thread attempts to lock a mutex that is already locked, will the thread have to wait. As soon as the original thread unlocks the mutex, the second (waiting) thread will acquire the lock and be able to continue.
 

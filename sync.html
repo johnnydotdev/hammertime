@@ -1,0 +1,164 @@
+<h2>What is a Critical Section?</h2>
+<p>A critical section is a section of code that can only be executed by one thread at a time, if the program is to function correctly. If two threads (or processes) were to execute code inside the critical section at the same time then it is possible that program may no longer have correct behavior.</p>
+<h2>Is just incrementing a variable a critical section?</h2>
+<p>Possibly. Incrementing a variable (<code>i++</code>) is performed in three individual steps: Copy the memory contents to the CPU register. Increment the value in the CPU. Store the new value in memory. If the memory location is only accessible by one thread (e.g. automatic variable <code>i</code> below) then there is no possibility of a race condition and no Critical Section associated with <code>i</code>. However the <code>sum</code> variable is a global variable and accessed by two threads. It is possible that two threads may attempt to increment the variable at the same time.</p>
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;pthread.h&gt;</span>
+<span class="c1">// Compile with -pthread</span>
+
+<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//shared</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">countgold</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">param</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="c1">//local to each thread</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">pthread_t</span> <span class="n">tid1</span><span class="p">,</span> <span class="n">tid2</span><span class="p">;</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="c1">//Wait for both threads to finish:</span>
+    <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ARRRRG sum is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Typical output of the above code is <code>ARGGGH sum is 8140268</code><br />
+A different sum is printed each time the program is run because there is a race condition; the code does not stop two threads from reading-writing <code>sum</code> at the same time. For example both threads copy the current value of sum into CPU that runs each thread (let's pick 123). Both threads increment one to their own copy. Both threads write back the value (124). If the threads had accessed the sum at different times then the count would have been 125.</p>
+<h2>How do I ensure only one thread at a time can access a global variable?</h2>
+<p>You mean, "Help - I need a mutex!"<br />
+If one thread is currently inside a critical section we would like another thread to wait until the first thread is complete. For this purpose we can use a mutex (short for Mutual Exclusion).</p>
+<p>For simple examples the smallest amount of code we need to add is just three lines:</p>
+<div class="highlight"><pre><span class="kt">pthread_mutex_t</span> <span class="n">m</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span> <span class="c1">// global variable</span>
+<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span> <span class="c1">// start of Critical Section</span>
+<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span> <span class="c1">//end of Critical Section</span>
+</pre></div>
+
+
+<p>Once we are finished with the mutex we should also call <code>pthread_mutex_destroy(&amp;m)</code> too. Note, you can only destroy an unlocked mutex. Calling destroy on a destroyed lock, initializing an initialized lock, locking an already locked lock, unlocking an unlocked lock etc are unsupported (at least for default mutexes) and usually result in undefined behavior.</p>
+<p>@MCQ<br />
+What is the class I am taking?<br />
+- CS 241<br />
+- CS 374<br />
+- CS 210<br />
+- STAT 428<br />
+@END</p>
+<p>@MCQ<br />
+What is the class you are taking?<br />
+- CS 196<br />
+- CS 421<br />
+- CS 473<br />
+- CS 241<br />
+@END</p>
+<h2>If I lock a mutex, does it stop all other threads?</h2>
+<p>No, the other threads will continue. It's only when a thread attempts to lock a mutex that is already locked, will the thread have to wait. As soon as the original thread unlocks the mutex, the second (waiting) thread will acquire the lock and be able to continue.</p>
+<h2>Are there other ways to create a mutex?</h2>
+<p>Yes. You can use the macro PTHREAD_MUTEX_INITIALIZER only for global ('static') variables.<br />
+m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
+<code>pthread_mutex_init(&amp;m,NULL)</code>. The init version includes options to trade performance for additional error-checking and advanced sharing options.</p>
+<div class="highlight"><pre><span class="kt">pthread_mutex_t</span> <span class="o">*</span><span class="n">lock</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">pthread_mutex_t</span><span class="p">));</span> 
+<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="c1">//later</span>
+<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+</pre></div>
+
+
+<h2><code>So pthread_mutex_lock</code> stops the other threads when they read the same variable?</h2>
+<p>No. A mutex is not that smart - it works with code (threads), not data. Only when another thread calls <code>lock</code> on a locked mutex will the second thread need to wait until the mutex is unlocked.</p>
+<h2>Can I create mutex before fork-ing?</h2>
+<p>Yes - however the child and parent process will not share virtual memory and each one will have a mutex independent of the other.</p>
+<p>(Advanced note: There are advanced options using shared memory that allow a child and parent to share a mutex if it's created with the correct options and uses a shared memory segment. See <a href="http://stackoverflow.com/questions/19172541/procs-fork-and-mutexes">stackoverflow example</a> )</p>
+<h2>If one thread locks a mutex can another thread unlock it?</h2>
+<p>No. The same thread must unlock it.</p>
+<h2>Can I use two or more mutex locks?</h2>
+<p>Yes! In fact it's common to have one lock per data structure that you need to update.</p>
+<p>If you only have one lock then they may be significant contention for the lock between two threads that was unnecessary. For example if two threads were updating two different counters it might not be necessary to use the same lock.</p>
+<p>However simply creating many locks is insufficient: It's important to be able to reason about critical sections e.g. it's important that one thread can't read two data structures while they are being updated and temporarily in an inconsistent state.</p>
+<h2>Is there any overhead in calling lock and unlock?</h2>
+<p>There is a small amount of overhead of calling <code>pthread_mutex_lock</code> and <code>_unlock</code>; however this is the price you pay for correctly functioning programs!</p>
+<h2>Simplest complete example?</h2>
+<p>A complete example is shown below</p>
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;pthread.h&gt;</span>
+
+<span class="c1">// Compile with -pthread</span>
+<span class="c1">// Create a mutex this ready to be locked!</span>
+<span class="kt">pthread_mutex_t</span> <span class="n">m</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">countgold</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">param</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="c1">//Same thread that locks the mutex must unlock it</span>
+    <span class="c1">//Critical section is just &#39;sum += 1&#39;</span>
+    <span class="c1">//However locking and unlocking a million times</span>
+    <span class="c1">//has significant overhead in this simple answer</span>
+
+    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+
+    <span class="c1">// Other threads that call lock will have to wait until we call unlock</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sum</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">pthread_t</span> <span class="n">tid1</span><span class="p">,</span> <span class="n">tid2</span><span class="p">;</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="c1">//Wait for both threads to finish:</span>
+    <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ARRRRG sum is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>In the code above, the thread gets the lock to the counting house before entering. The critical section is only the <code>sum+=1</code> so the following version is also correct but slower - </p>
+<div class="highlight"><pre>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This process runs slower because we lock and unlock the mutex a million times, which is expensive - at least compared with incrementing a variable. (And in this simple example we didn't really need threads - we could have added up twice!)  A faster multi-thread example would be to add one million using an automatic(local) variable and only then adding it to a shared total after the calculation loop has finished:</p>
+<div class="highlight"><pre>    <span class="kt">int</span> <span class="n">local</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">local</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="n">sum</span> <span class="o">+=</span> <span class="n">local</span><span class="p">;</span>
+    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>How do I find out more?</h2>
+<p><a href="http://cs-education.github.io/sys">Play!</a> Read the man page!<br />
+<em> <a href="http://linux.die.net/man/3/pthread_mutex_lock">pthread_mutex_lock man page</a><br />
+</em> <a href="http://linux.die.net/man/3/pthread_mutex_unlock">pthread_mutex_unlock man page</a><br />
+<em> <a href="http://linux.die.net/man/3/pthread_mutex_init">pthread_mutex_init man page</a><br />
+</em> <a href="http://linux.die.net/man/3/pthread_mutex_destroy">pthread_mutex_destroy man page</a></p>
