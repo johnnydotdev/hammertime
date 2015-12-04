@@ -31,6 +31,7 @@ class MCProcessor(BlockProcessor):
         choices = etree.SubElement(question, "ol")
         choices.set("type", "A")
         for choice in lines[1:-1]:
+            choice = choice.lstrip("- ")
             choice_elem = etree.SubElement(choices, "li")
             choice_content = etree.SubElement(choice_elem, "a")
             choice_content.set("href", "#")
