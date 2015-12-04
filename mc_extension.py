@@ -3,11 +3,11 @@ from markdown.blockprocessors import BlockProcessor
 from markdown.extensions import Extension
 from markdown.util import etree
 
-MCQ_START = "@MCQ"
+MCQ_START = "@MCQ\n"
 ANS = "@ANS"
 HINT = "@HINT"
 EXP = "@EXP"
-MCQ_END = "@END"
+MCQ_END = "@END\n"
 
 class MCQuestion(object):
     """
@@ -22,6 +22,15 @@ class MCQuestion(object):
         self.hint        = hint
         self.explanation = explanation
 
+    def __repr__(self):
+        return """Question: {0},
+Choices: {1},
+Answer: {2},
+Hint: {3},
+Explanation: {4}""".format(self.question, str(self.choices),
+                            self.answer, self.hint,
+                            self.explanation)
+
 class MCProcessor(BlockProcessor):
     """
     Add Processor for BlockParsers
@@ -30,11 +39,10 @@ class MCProcessor(BlockProcessor):
         ret = block.startswith(MCQ_START)
         return ret
 
-    def run(self, parent, blocks):
-        raw_block = blocks.pop(0)
-        lines = [l.strip() for l in
-                 raw_block.rstrip(MCQ_END).lstrip(MCQ_START).split("\n")]
-
+    def construct_mcquestion(self, lines):
+        """
+        Return a constructed MCQuestion object given the relevant lines.
+        """
         # Extracting relevant data for construction of MCQuestion object.
         question    = lines[0]
         choices     = []
@@ -42,27 +50,40 @@ class MCProcessor(BlockProcessor):
         hint        = ""
         explanation = ""
 
+        print lines
         for line in lines[1:]:
-            if line.endswith(ANS):
-                answer = line
-                choices.append(line)
-                continue
-            elif line.endswith(HINT):
-                hint = line
+            if line.endswith(HINT):
+                hint = line.rstrip(HINT)
                 continue
             elif line.endswith(EXP):
-                explanation = line
+                explanation = line.rstrip(EXP)
                 continue
             else:
-                choices.append(line)
+                # Add to choices whether a designated answer or not.
+                stripped = line.lstrip("- ")
+                if line.endswith(ANS):
+                    stripped = stripped.rstrip(ANS)
+                    answer = stripped
+                choices.append(stripped)
 
         # Construct the MCQuestion object.
-        mc_question = MCQuestion(question=question, choices=choices,
+        return MCQuestion(question=question, choices=choices,
                                  answer=answer, hint=hint, explanation=explanation)
 
-        question_container = etree.SubElement(parent, 'div')
+    #def construct_mc_js(self, ):
+
+    def run(self, parent, blocks):
+        raw_block = blocks.pop(0)
+        lines = [l.strip() for l in
+                 raw_block.rstrip(MCQ_END).lstrip(MCQ_START).split("\n")]
+
+        mc_question = self.construct_mcquestion(lines)
+
+        # Construct question container TreeElement.
+        question_container = etree.SubElement(parent, "div")
         question_container.set("class", "question-container")
 
+        # Add TreeElement for question content container.
         question = etree.SubElement(question_container, 'div')
         question.set("class", "question")
 
@@ -71,13 +92,15 @@ class MCProcessor(BlockProcessor):
 
         choice_container = etree.SubElement(question, "ol")
         choice_container.set("type", "A")
-        for choice in choices:
-            choice = choice.lstrip("- ")
+        print mc_question
+        for choice in mc_question.choices:
             choice_elem = etree.SubElement(choice_container, "li")
             choice_content = etree.SubElement(choice_elem, "a")
             choice_content.set("href", "#")
             choice_content.set("class", "pure-button")
             choice_content.text = choice
+
+        script = etree.SubElement(parent, "script")
 
 class MCExtension(Extension):
     """
