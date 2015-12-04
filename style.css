@@ -1,0 +1,16 @@
+.question-container {
+	border-radius: 3px;
+	background: #ecf0f1;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #888;
+	margin: 10px;
+}
+
+.question {
+	margin: 20px;
+}
+
+.pure-button {
+	background-color: #bdc3c7;
+}
