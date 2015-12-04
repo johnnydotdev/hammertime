@@ -44,6 +44,26 @@ If one thread is currently inside a critical section we would like another threa
 
 
 <p>Once we are finished with the mutex we should also call <code>pthread_mutex_destroy(&amp;m)</code> too. Note, you can only destroy an unlocked mutex. Calling destroy on a destroyed lock, initializing an initialized lock, locking an already locked lock, unlocking an unlocked lock etc are unsupported (at least for default mutexes) and usually result in undefined behavior.</p>
+<div class="question-container">
+<div class="question">
+<h3>What is the class I am taking?</h3>
+<ol type="A">
+<li><a href="#">- CS 241</a></li>
+<li><a href="#">- CS 374</a></li>
+<li><a href="#">- CS 210</a></li>
+</ol>
+</div>
+</div>
+<div class="question-container">
+<div class="question">
+<h3>What is the class you are taking?</h3>
+<ol type="A">
+<li><a href="#">- CS 196</a></li>
+<li><a href="#">- CS 421</a></li>
+<li><a href="#">- CS 473</a></li>
+</ol>
+</div>
+</div>
 <h2>If I lock a mutex, does it stop all other threads?</h2>
 <p>No, the other threads will continue. It's only when a thread attempts to lock a mutex that is already locked, will the thread have to wait. As soon as the original thread unlocks the mutex, the second (waiting) thread will acquire the lock and be able to continue.</p>
 <h2>Are there other ways to create a mutex?</h2>
