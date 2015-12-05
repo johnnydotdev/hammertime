@@ -56,27 +56,17 @@ If one thread is currently inside a critical section we would like another threa
 <div class="question-container">
 <div class="question">
 <h3>What is the class I am taking?</h3>
-<ol type="A">
+<a class="pure-button hint-button" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">Display Hint</a><a class="pure-button exp-button" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">Display Explanation</a><ol type="A">
 <li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">CS <em>241</em></a></li>
 <li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">CS 374</a></li>
 <li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">CS 210</a></li>
 <li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">STAT 428</a></li>
 </ol>
+<p id="hintquestionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u"></p>
+<p id="expquestionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u"></p>
 </div>
 </div>
 <script>var questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u = {question: 'What is the class I am taking?',choices: ['CS <em>241</em>', 'CS 374', 'CS 210', 'STAT 428'],answer: 'CS 374',hint: 'No Hint 4 u ',explanation: 'No Explanation 4 u '};</script>
-<div class="question-container">
-<div class="question">
-<h3>What is the class you are taking?</h3>
-<ol type="A">
-<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 196</a></li>
-<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 421</a></li>
-<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 473</a></li>
-<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 241</a></li>
-</ol>
-</div>
-</div>
-<script>var questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation = {question: 'What is the class you are taking?',choices: ['CS 196', 'CS 421', 'CS 473', 'CS 241'],answer: '',hint: '',explanation: ''};</script>
 <h2>If I lock a mutex, does it stop all other threads?</h2>
 <p>No, the other threads will continue. It's only when a thread attempts to lock a mutex that is already locked, will the thread have to wait. As soon as the original thread unlocks the mutex, the second (waiting) thread will acquire the lock and be able to continue.</p>
 <h2>Are there other ways to create a mutex?</h2>
@@ -102,6 +92,20 @@ m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
 <p>Yes! In fact it's common to have one lock per data structure that you need to update.</p>
 <p>If you only have one lock then they may be significant contention for the lock between two threads that was unnecessary. For example if two threads were updating two different counters it might not be necessary to use the same lock.</p>
 <p>However simply creating many locks is insufficient: It's important to be able to reason about critical sections e.g. it's important that one thread can't read two data structures while they are being updated and temporarily in an inconsistent state.</p>
+<div class="question-container">
+<div class="question">
+<h3>What is the class you are taking?</h3>
+<a class="pure-button hint-button" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation">Display Hint</a><a class="pure-button exp-button" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation">Display Explanation</a><ol type="A">
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation"><strong>CS 196</strong></a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation">CS 421</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation">CS 473 <img alt="" src="http://puu.sh/lJVlP/9e050b8c97.png" /></a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation">CS 241</a></li>
+</ol>
+<p id="hintquestionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation"></p>
+<p id="expquestionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation"></p>
+</div>
+</div>
+<script>var questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473httppuushljvlp9e050b8c97pngucs241answercs421hintexplanation = {question: 'What is the class you are taking?',choices: ['<strong>CS 196</strong>', 'CS 421', 'CS 473 <img alt="" src="http://puu.sh/lJVlP/9e050b8c97.png" />', 'CS 241'],answer: 'CS 421',hint: '',explanation: ''};</script>
 <h2>Is there any overhead in calling lock and unlock?</h2>
 <p>There is a small amount of overhead of calling <code>pthread_mutex_lock</code> and <code>_unlock</code>; however this is the price you pay for correctly functioning programs!</p>
 <h2>Simplest complete example?</h2>

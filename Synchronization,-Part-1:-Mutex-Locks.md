@@ -56,14 +56,6 @@ No Hint 4 u @HINT
 No Explanation 4 u @EXP
 @END
 
-@MCQ
-What is the class you are taking?
-- CS 196
-- CS 421
-- CS 473
-- CS 241
-@END
-
 ## If I lock a mutex, does it stop all other threads?
 No, the other threads will continue. It's only when a thread attempts to lock a mutex that is already locked, will the thread have to wait. As soon as the original thread unlocks the mutex, the second (waiting) thread will acquire the lock and be able to continue.
 
@@ -98,6 +90,15 @@ Yes! In fact it's common to have one lock per data structure that you need to up
 If you only have one lock then they may be significant contention for the lock between two threads that was unnecessary. For example if two threads were updating two different counters it might not be necessary to use the same lock.
  
 However simply creating many locks is insufficient: It's important to be able to reason about critical sections e.g. it's important that one thread can't read two data structures while they are being updated and temporarily in an inconsistent state.
+
+@MCQ
+What is the class you are taking?
+- **CS 196**
+- CS 421 @ANS
+- CS 473 ![](http://puu.sh/lJVlP/9e050b8c97.png)
+- CS 241
+@END
+
 
 ## Is there any overhead in calling lock and unlock?
 There is a small amount of overhead of calling `pthread_mutex_lock` and `_unlock`; however this is the price you pay for correctly functioning programs!
