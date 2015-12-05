@@ -102,10 +102,11 @@ class MCProcessor(BlockProcessor):
         # Add TreeElement for question content container.
         question = etree.SubElement(question_container, 'div')
         question.set("class", "question")
-        #question.set("id", mc_question_id)
 
         question_text = etree.SubElement(question, "h3")
         question_text.text = mc_question.question
+        hint_elem = etree.SubElement(parent, "p")
+        hint_elem.set("id", "hint" + mc_question_id)
 
         choice_container = etree.SubElement(question, "ol")
         choice_container.set("type", "A")
@@ -119,6 +120,9 @@ class MCProcessor(BlockProcessor):
 
         script = etree.SubElement(parent, "script")
         script.text = self.construct_mc_js(mc_question, mc_question_id)
+
+        answer_elem = etree.SubElement(parent, "p")
+        answer_elem.set("id", "answer" + mc_question_id)
 
 class MCExtension(Extension):
     """
