@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
-    name = 'hammertime',
-    packages = ['hammertime'],
+    name = 'MCQ Hammertime',
+    packages = ['mcq_hammertime'],
     version = '0.1',
     description = 'A GFM to HTML parser that adds interactive Multiple Choice question functionality.',
     author = 'Johnny Chang',
