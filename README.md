@@ -1,6 +1,13 @@
-# A Github Flavored Markdown to HTML converter. With Multiple Choice Question capacity.
+#
+A Github Flavored Markdown to HTML converter. With Multiple Choice Question capacity.
 
-###How To Use
+### Features
+- Convert GFM to HTML
+- Interactive Javascript for Multiple Choice Questions
+- Extends Python Markdown
+- Inline Markdown usable in `@MCQ` blocks
+
+### How To Use
 1. Begin your block with `@MCQ`
 - Start your first line with the question
 - Create a Markdown list, as normal--these will be your answer choices
