@@ -4,8 +4,10 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
 	<link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
-<body><h2>What is a Critical Section?</h2>
+<body>
+<h2>What is a Critical Section?</h2>
 <p>A critical section is a section of code that can only be executed by one thread at a time, if the program is to function correctly. If two threads (or processes) were to execute code inside the critical section at the same time then it is possible that program may no longer have correct behavior.</p>
 <h2>Is just incrementing a variable a critical section?</h2>
 <p>Possibly. Incrementing a variable (<code>i++</code>) is performed in three individual steps: Copy the memory contents to the CPU register. Increment the value in the CPU. Store the new value in memory. If the memory location is only accessible by one thread (e.g. automatic variable <code>i</code> below) then there is no possibility of a race condition and no Critical Section associated with <code>i</code>. However the <code>sum</code> variable is a global variable and accessed by two threads. It is possible that two threads may attempt to increment the variable at the same time.</p>
@@ -55,26 +57,26 @@ If one thread is currently inside a critical section we would like another threa
 <div class="question">
 <h3>What is the class I am taking?</h3>
 <ol type="A">
-<li><a class="pure-button" href="#">CS 241</a></li>
-<li><a class="pure-button" href="#">CS 374 </a></li>
-<li><a class="pure-button" href="#">CS 210</a></li>
-<li><a class="pure-button" href="#">STAT 428</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">CS 241</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">CS 374</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">CS 210</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u">STAT 428</a></li>
 </ol>
 </div>
 </div>
-<script></script>
+<script>var questionwhatistheclassiamtakingchoicesucs241ucs374ucs210ustat428answercs374hintnohint4uexplanationnoexplanation4u = {question: 'What is the class I am taking?',choices: ['CS 241', 'CS 374', 'CS 210', 'STAT 428'],answer: 'CS 374',hint: 'No Hint 4 u ',explanation: 'No Explanation 4 u '};</script>
 <div class="question-container">
 <div class="question">
 <h3>What is the class you are taking?</h3>
 <ol type="A">
-<li><a class="pure-button" href="#">CS 196</a></li>
-<li><a class="pure-button" href="#">CS 421</a></li>
-<li><a class="pure-button" href="#">CS 473</a></li>
-<li><a class="pure-button" href="#">CS 241</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 196</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 421</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 473</a></li>
+<li><a class="pure-button choice" href="#" question_id="questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation">CS 241</a></li>
 </ol>
 </div>
 </div>
-<script></script>
+<script>var questionwhatistheclassyouaretakingchoicesucs196ucs421ucs473ucs241answerhintexplanation = {question: 'What is the class you are taking?',choices: ['CS 196', 'CS 421', 'CS 473', 'CS 241'],answer: '',hint: '',explanation: ''};</script>
 <h2>If I lock a mutex, does it stop all other threads?</h2>
 <p>No, the other threads will continue. It's only when a thread attempts to lock a mutex that is already locked, will the thread have to wait. As soon as the original thread unlocks the mutex, the second (waiting) thread will acquire the lock and be able to continue.</p>
 <h2>Are there other ways to create a mutex?</h2>
@@ -182,6 +184,7 @@ m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular.min.js"></script>
 	<script src="https://code.angularjs.org/1.5.0-beta.2/angular-sanitize.min.js"></script>
 	<script src="app.js"></script>
+    <script src="check_mc.js"></script>
 </body>
 </html>
 </body>
