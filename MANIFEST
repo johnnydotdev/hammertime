@@ -2,3 +2,4 @@
 setup.cfg
 setup.py
 mcq_hammertime/__init__.py
+mcq_hammertime/mcq_hammertime.py

@@ -7,6 +7,12 @@ A Github Flavored Markdown to HTML converter. With Multiple Choice Question capa
 - Extends Python Markdown
 - Inline Markdown usable in `@MCQ` blocks
 
+### Install
+- `pip install mcq_hammertime`
+- Make sure Python Markdown is installed
+- Install [py-gfm](https://github.com/google/py-gfm)
+- Add `mcq_extension` to the list of extensions, see `mcq_hammertime/example` for reference
+
 ### How To Use
 1. Begin your block with `@MCQ`
 - Start your first line with the question
