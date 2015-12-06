@@ -9,17 +9,23 @@
 <body>
 <h2>What is a Critical Section?</h2>
 <p>A critical section is a section of code that can only be executed by one thread at a time, if the program is to function correctly. If two threads (or processes) were to execute code inside the critical section at the same time then it is possible that program may no longer have correct behavior.</p>
+<p>&lt;h1&gt;<br />
+I can be malicious!<br />
+&lt;/h1&gt;</p>
+<p>&lt;script&gt;<br />
+alert("no");<br />
+&lt;/script&gt;</p>
 <h2>Is just incrementing a variable a critical section?</h2>
 <p>Possibly. Incrementing a variable (<code>i++</code>) is performed in three individual steps: Copy the memory contents to the CPU register. Increment the value in the CPU. Store the new value in memory. If the memory location is only accessible by one thread (e.g. automatic variable <code>i</code> below) then there is no possibility of a race condition and no Critical Section associated with <code>i</code>. However the <code>sum</code> variable is a global variable and accessed by two threads. It is possible that two threads may attempt to increment the variable at the same time.</p>
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;pthread.h&gt;</span>
+<div class="highlight"><pre><span class="cp">#include &amp;lt;stdio.h&amp;gt;</span>
+<span class="cp">#include &amp;lt;pthread.h&amp;gt;</span>
 <span class="c1">// Compile with -pthread</span>
 
 <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//shared</span>
 
 <span class="kt">void</span> <span class="o">*</span><span class="nf">countgold</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">param</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="c1">//local to each thread</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">sum</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
@@ -27,8 +33,8 @@
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="kt">pthread_t</span> <span class="n">tid1</span><span class="p">,</span> <span class="n">tid2</span><span class="p">;</span>
-    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 
     <span class="c1">//Wait for both threads to finish:</span>
     <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
@@ -47,12 +53,12 @@ A different sum is printed each time the program is run because there is a race 
 If one thread is currently inside a critical section we would like another thread to wait until the first thread is complete. For this purpose we can use a mutex (short for Mutual Exclusion).</p>
 <p>For simple examples the smallest amount of code we need to add is just three lines:</p>
 <div class="highlight"><pre><span class="kt">pthread_mutex_t</span> <span class="n">m</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span> <span class="c1">// global variable</span>
-<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span> <span class="c1">// start of Critical Section</span>
-<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span> <span class="c1">//end of Critical Section</span>
+<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span> <span class="c1">// start of Critical Section</span>
+<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span> <span class="c1">//end of Critical Section</span>
 </pre></div>
 
 
-<p>Once we are finished with the mutex we should also call <code>pthread_mutex_destroy(&amp;m)</code> too. Note, you can only destroy an unlocked mutex. Calling destroy on a destroyed lock, initializing an initialized lock, locking an already locked lock, unlocking an unlocked lock etc are unsupported (at least for default mutexes) and usually result in undefined behavior.</p>
+<p>Once we are finished with the mutex we should also call <code>pthread_mutex_destroy(&amp;amp;m)</code> too. Note, you can only destroy an unlocked mutex. Calling destroy on a destroyed lock, initializing an initialized lock, locking an already locked lock, unlocking an unlocked lock etc are unsupported (at least for default mutexes) and usually result in undefined behavior.</p>
 <div class="question-container">
 <div class="question">
 <h3>What is the class I am taking?</h3>
@@ -72,7 +78,7 @@ If one thread is currently inside a critical section we would like another threa
 <h2>Are there other ways to create a mutex?</h2>
 <p>Yes. You can use the macro PTHREAD_MUTEX_INITIALIZER only for global ('static') variables.<br />
 m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
-<code>pthread_mutex_init(&amp;m,NULL)</code>. The init version includes options to trade performance for additional error-checking and advanced sharing options.</p>
+<code>pthread_mutex_init(&amp;amp;m,NULL)</code>. The init version includes options to trade performance for additional error-checking and advanced sharing options.</p>
 <div class="highlight"><pre><span class="kt">pthread_mutex_t</span> <span class="o">*</span><span class="n">lock</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">pthread_mutex_t</span><span class="p">));</span> 
 <span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 <span class="c1">//later</span>
@@ -110,8 +116,8 @@ m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
 <p>There is a small amount of overhead of calling <code>pthread_mutex_lock</code> and <code>_unlock</code>; however this is the price you pay for correctly functioning programs!</p>
 <h2>Simplest complete example?</h2>
 <p>A complete example is shown below</p>
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;pthread.h&gt;</span>
+<div class="highlight"><pre><span class="cp">#include &amp;lt;stdio.h&amp;gt;</span>
+<span class="cp">#include &amp;lt;pthread.h&amp;gt;</span>
 
 <span class="c1">// Compile with -pthread</span>
 <span class="c1">// Create a mutex this ready to be locked!</span>
@@ -127,21 +133,21 @@ m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
     <span class="c1">//However locking and unlocking a million times</span>
     <span class="c1">//has significant overhead in this simple answer</span>
 
-    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span>
 
     <span class="c1">// Other threads that call lock will have to wait until we call unlock</span>
 
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">sum</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span>
     <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="kt">pthread_t</span> <span class="n">tid1</span><span class="p">,</span> <span class="n">tid2</span><span class="p">;</span>
-    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">countgold</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 
     <span class="c1">//Wait for both threads to finish:</span>
     <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
@@ -154,10 +160,10 @@ m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
 
 
 <p>In the code above, the thread gets the lock to the counting house before entering. The critical section is only the <code>sum+=1</code> so the following version is also correct but slower - </p>
-<div class="highlight"><pre>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+<div class="highlight"><pre>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span>
         <span class="n">sum</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+        <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
 <span class="p">}</span>
@@ -166,13 +172,13 @@ m = PTHREAD_MUTEX_INITIALIZER is equivalent to the more general purpose<br />
 
 <p>This process runs slower because we lock and unlock the mutex a million times, which is expensive - at least compared with incrementing a variable. (And in this simple example we didn't really need threads - we could have added up twice!)  A faster multi-thread example would be to add one million using an automatic(local) variable and only then adding it to a shared total after the calculation loop has finished:</p>
 <div class="highlight"><pre>    <span class="kt">int</span> <span class="n">local</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">10000000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
        <span class="n">local</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span>
     <span class="n">sum</span> <span class="o">+=</span> <span class="n">local</span><span class="p">;</span>
-    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">m</span><span class="p">);</span>
 
     <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
 <span class="p">}</span>

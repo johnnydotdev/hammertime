@@ -1,14 +1,19 @@
 from __future__ import absolute_import
 from markdown.blockprocessors import BlockProcessor
 from markdown.extensions import Extension
+from markdown.preprocessors import Preprocessor
 from markdown.util import etree
-import re
+import re, cgi
 
 MCQ_START = "@MCQ\n"
 ANS = "@ANS"
 HINT = "@HINT"
 EXP = "@EXP"
 MCQ_END = "@END\n"
+
+class HTMLPreprocessor(Preprocessor):
+    def run(self, lines):
+        return [cgi.escape(l) for l in lines]
 
 class MCQuestion(object):
     """
@@ -142,6 +147,7 @@ class MCExtension(Extension):
     Add Multiple Choice Questions to Markdown.
     """
     def extendMarkdown(self, md, md_globals):
+        md.preprocessors.add('html_escape', HTMLPreprocessor(md), '_begin')
         md.parser.blockprocessors.add('mcq', MCProcessor(md.parser), '_begin')
 
 def makeExtension(**kwargs):

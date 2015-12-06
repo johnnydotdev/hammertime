@@ -1,6 +1,14 @@
 ## What is a Critical Section?
 A critical section is a section of code that can only be executed by one thread at a time, if the program is to function correctly. If two threads (or processes) were to execute code inside the critical section at the same time then it is possible that program may no longer have correct behavior.
 
+<h1>
+I can be malicious!
+</h1>
+
+<script>
+alert("no");
+</script>
+
 ## Is just incrementing a variable a critical section?
 Possibly. Incrementing a variable (`i++`) is performed in three individual steps: Copy the memory contents to the CPU register. Increment the value in the CPU. Store the new value in memory. If the memory location is only accessible by one thread (e.g. automatic variable `i` below) then there is no possibility of a race condition and no Critical Section associated with `i`. However the `sum` variable is a global variable and accessed by two threads. It is possible that two threads may attempt to increment the variable at the same time.
 ```C
